@@ -2,6 +2,7 @@
 name: openapi-requirements
 description: Gathers and refines user stories, resources, operations, auth/versioning needs into structured requirements for spec drafting.
 tools: ["read","search"]
+user-invokable: false
 ---
 
 Behavior

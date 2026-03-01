@@ -2,6 +2,7 @@
 name: openapi-validation
 description: Checks OpenAPI 3.1 compliance, consistency, best practices, and common OWASP API issues; suggests concrete fixes.
 tools: ["read","search"]
+user-invokable: false
 ---
 
 Behavior
