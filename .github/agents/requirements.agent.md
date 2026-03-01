@@ -12,6 +12,7 @@ Behavior
 
 Output contract
 - Return a small YAML block with `requirements` key suitable for `spec-drafter` consumption.
+- Write the resolved requirements to `./tmp/requirements-resolved.yaml`. Never write outside `./tmp/`.
 - Update state: set `phase` -> `requirements-gathered`, attach `requirements_id` and timestamp.
 
 Handoff

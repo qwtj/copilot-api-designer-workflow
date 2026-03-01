@@ -11,8 +11,9 @@ Behavior
 - Produce machine-readable findings (JSON array of issues) plus suggested YAML diffs/fixes.
 
 Output contract
+- Write `findings` JSON to `./tmp/validation-findings.json` and any fix diffs to `./tmp/validation-fixes.yaml`. ALL artifacts go in `./tmp/`. Never write outside `./tmp/`.
 - Return `findings` (JSON) and optional `fixes` as YAML `diff` blocks. If small, include `auto_apply:true` recommended flag.
-- Update state: set `phase` -> `validation-passed` or `refinement-needed` depending on results.
+- Update state: set `phase` -> `validation-complete` (issues found) or `final-approved` (no blocking issues).
 
 Handoff
-- On success, automatically hand back to orchestrator; on failures, attach diffs and route to `openapi-refinement`. The orchestrator will continue the loop without any manual interruption.
+- Immediately hand back to orchestrator. On failures, attach diffs and set phase `validation-complete` so orchestrator routes to `openapi-refinement`. No manual interruption ever.

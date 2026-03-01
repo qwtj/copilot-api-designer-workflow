@@ -11,8 +11,9 @@ Behavior
 - Output either a `diff` (preferred) or a full `openapi.yaml` when major structural changes are required.
 
 Output contract
+- Write the complete OpenAPI spec to `./tmp/openapi.yaml`. ALL artifacts go in `./tmp/`. Never create files outside `./tmp/`.
 - Provide YAML in a fenced block labeled `diff` or `full`. Include brief notes on design choices (e.g., pagination approach).
-- Update state: `phase` -> `initial-spec-drafted`, attach `spec_version` and change summary.
+- Update state: `phase` -> `spec-drafted`, attach `spec_version` and change summary.
 
 Handoff
-- Automatically send output to orchestrator; recommend next agent `openapi-refinement` or `openapi-validation` depending on completeness. The orchestrator should invoke the recommended agent without requiring any additional prompt.
+- Automatically send output to orchestrator; recommend next agent `openapi-validation`. The orchestrator invokes the next agent immediately without any additional prompt or pause.
