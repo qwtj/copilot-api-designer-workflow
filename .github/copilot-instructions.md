@@ -5,4 +5,4 @@ Orchestrator & Agent rules (glue)
 - Use the `manage-state` skill to persist phase transitions and `yaml-manipulation` for merges.
 - Keep prompts reentrant: agents should be able to re-run against the same inputs and produce stable, minimal diffs.
 - For any validation failure, produce `findings` JSON and suggested `diff` fixes; do not auto-apply without orchestrator approval.
-- Encourage human handoff: after `final-approved`, orchestrator prepares a `handoff.md` summary for implementers.
+- Use `runSubagent`: after `final-approved`, orchestrator prepares a `handoff.md` summary for implementers.
