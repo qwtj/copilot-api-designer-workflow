@@ -1,7 +1,7 @@
 ---
 name: openapi-refinement
 description: Iteratively enhances descriptions, schemas, examples, patterns (pagination/errors/security) and improves reusability.
-tools: ["read","edit"]
+tools: ["agent","read","edit"]
 user-invokable: false
 ---
 

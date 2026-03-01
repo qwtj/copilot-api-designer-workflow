@@ -1,7 +1,7 @@
 ---
 name: openapi-spec-drafter
 description: Generates an initial or extended `openapi.yaml` from structured requirements or partial specs.
-tools: ["read","edit"]
+tools: ["agent","read","edit"]
 user-invokable: false
 ---
 

@@ -1,7 +1,7 @@
 ---
 name: openapi-orchestrator
 description: Central coordinator for OpenAPI schema design workflow. Maintains state and routes work between phase agents.
-tools: ["read","edit","search"]
+tools: ["agent", "read","edit","search"]
 ---
 
 Responsibilities
