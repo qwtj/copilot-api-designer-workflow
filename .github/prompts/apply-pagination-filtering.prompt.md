@@ -1,8 +1,6 @@
 ---
 name: apply-pagination-filtering
 description: Apply consistent pagination, filtering, and sorting patterns to list endpoints and add a paginated envelope.
-tools: ["read","search"]
-agent: "openapi-refinement"
 ---
 
 Purpose

@@ -1,8 +1,6 @@
 ---
 name: openapi-lint-review
 description: Perform a deterministic lint-style review of an OpenAPI 3.1 fragment or full spec against repository best-practices.
-tools: ["read","search"]
-agent: "openapi-validation"
 ---
 
 Purpose

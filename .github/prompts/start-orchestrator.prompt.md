@@ -1,7 +1,6 @@
 ---
 name: start-orchestrator
 description: Start the orchestrator with a provided requirements or OpenAPI file; returns a handoff JSON for the next agent.
-tools: ["read", "agent"]
 agent: "openapi-orchestrator"
 ---
 

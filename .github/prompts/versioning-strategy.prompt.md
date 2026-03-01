@@ -1,7 +1,6 @@
 ---
 name: versioning-strategy
 description: Recommend a versioning strategy and produce a small diff updating `info.version` and server URL patterns.
-tools: ["read","search"]
 ---
 
 Purpose

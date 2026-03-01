@@ -1,7 +1,6 @@
 ---
 name: generate-schemas
 description: Generate reusable `components.schemas` entries from resource descriptions or example payloads.
-tools: ["read","search"]
 ---
 
 Purpose
