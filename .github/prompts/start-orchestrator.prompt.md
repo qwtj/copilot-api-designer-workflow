@@ -17,23 +17,7 @@ Behavior
 1. Read `.github/openapi-design-state.json` via `manage-state`.
 2. Validate exactly one of `requirements_path` or `openapi_path` is provided; if invalid return an error object (see output shape).
 3. If `requirements_path` provided: set `phase` -> `requirements-gathering`, record artifact and history entry, and hand off to `openapi-requirements` with `{requirements_path, initiator, timestamp}`.
-4. If `openapi_path` provided: set `phase` -> `desired_next_phase||validation`, record artifact and history entry, and hand off to the appropriate agent (`openapi-validation` or `openapi-refinement`).
-5. Persist only the state changes via `manage-state` (do not apply spec diffs here).
-
-Output contract (always JSON)
-- On success:
-  {
-    "action": "handoff",
-    "to_agent": "<agent-name>",
-    "payload": { ... },
-    "state_patch": { ... },
-    "notes": "short reason"
-  }
-- On input error:
-  { "error": "exactly one of requirements_path or openapi_path required" }
-
-Reentrancy
-- Running this prompt multiple times with the same inputs must be idempotent (no duplicate history entries for identical requests).
+4. If `openapi_path` provided: set `phase` -> `desired_next_phase||validation`, record artifact and history entry, and run workflow.
 
 Example
 - Input: `{ "requirements_path": ".github/requirements.yaml", "initiator":"user:alice" }`

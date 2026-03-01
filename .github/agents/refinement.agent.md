@@ -14,4 +14,4 @@ Output contract
 - Update state: set `phase` -> `refinement-needed` (if more work) or `initial-spec-drafted` when ready for validation.
 
 Handoff
-- Hand back to orchestrator with diff and recommended next step (either another refinement pass or validation).
+- Immediately hand back to orchestrator with diff and recommended next step (either another refinement pass or validation). No manual confirmation should be needed between refinements.

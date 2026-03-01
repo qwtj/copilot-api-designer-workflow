@@ -15,4 +15,4 @@ Output contract
 - Update state: set `phase` -> `validation-passed` or `refinement-needed` depending on results.
 
 Handoff
-- On success, hand back to orchestrator; on failures, attach diffs and route to `openapi-refinement`.
+- On success, automatically hand back to orchestrator; on failures, attach diffs and route to `openapi-refinement`. The orchestrator will continue the loop without any manual interruption.

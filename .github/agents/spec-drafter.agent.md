@@ -15,4 +15,4 @@ Output contract
 - Update state: `phase` -> `initial-spec-drafted`, attach `spec_version` and change summary.
 
 Handoff
-- Send output to orchestrator; recommend next agent `openapi-refinement` or `openapi-validation` depending on completeness.
+- Automatically send output to orchestrator; recommend next agent `openapi-refinement` or `openapi-validation` depending on completeness. The orchestrator should invoke the recommended agent without requiring any additional prompt.

@@ -15,4 +15,4 @@ Output contract
 - Update state: set `phase` -> `requirements-gathered`, attach `requirements_id` and timestamp.
 
 Handoff
-- Call orchestrator with the YAML fragment and suggested next step (`spec-drafter`).
+- Automatically call orchestrator with the YAML fragment and suggested next step (`spec-drafter`). The orchestrator will immediately trigger the next agent; there is no pause or manual step between requirements collection and drafting.

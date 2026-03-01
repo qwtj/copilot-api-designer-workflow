@@ -6,8 +6,9 @@ tools: ["agent", "read","edit","search"]
 
 Responsibilities
 - Maintain and persist workflow state in `.github/openapi-design-state.json`.
-- Decide which phase agent to run next based on state, user input, and agent feedback.
+- Decide which phase agent to run next based on state, agent feedback, and any user signals, **without ever pausing for manual triggers**.
 - Orchestrate handoffs, receive agent outputs (YAML diffs or full `openapi.yaml`), and update state.
+- Immediately invoke the next appropriate agent as part of each handoff; there should be no artificial “stop” between steps.
 - Manage iteration loops: route back to `refinement` on validation failures, or forward to `validation` after drafting/refinement.
 - Produce concise progress reports and final handoff note for implementation.
 
