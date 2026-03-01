@@ -1,3 +1,7 @@
+---
+name: yaml-manipulation
+description: Provides utilities for agents to manipulate OpenAPI YAML files, including merging diffs, extracting
+---
 Purpose
 - Lightweight YAML helpers for merging diffs into an existing `openapi.yaml`, extracting sections, and producing minimal patches to reduce token usage.
 

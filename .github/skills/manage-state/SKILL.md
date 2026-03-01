@@ -1,3 +1,7 @@
+---
+name: manage-state
+description: Provides a consistent interface for agents to read and update the shared design state in `.github
+---
 Purpose
 - Provide concise, deterministic read/write/update patterns for `.github/openapi-design-state.json` so agents can persist progress.
 

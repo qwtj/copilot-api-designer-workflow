@@ -1,0 +1,486 @@
+openapi: "3.1.0"
+info:
+  title: "API Writer - Patient Records API"
+  version: "1.0.0"
+  description: "Minimal OpenAPI 3.1 spec for Patient and MedicalRecord resources. Sensitive medical information requires explicit patient consent."
+servers:
+  - url: https://api.example.com/v1
+    description: Production server
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT bearer authentication.
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://auth.example.com/authorize
+          tokenUrl: https://auth.example.com/token
+          scopes:
+            "patient:read": "Read patient basic data"
+            "patient:write": "Create or modify patients"
+            "record:read": "Read medical records (consent required)"
+            "record:write": "Create or modify medical records"
+            "consent:manage": "Manage consents"
+        clientCredentials:
+          tokenUrl: https://auth.example.com/token
+          scopes:
+            "patient:read": "Read patient basic data"
+            "patient:write": "Create or modify patients"
+            "record:read": "Read medical records (consent required)"
+            "record:write": "Create or modify medical records"
+            "consent:manage": "Manage consents"
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Numeric error code
+        message:
+          type: string
+          description: Human readable error message
+        details:
+          type: array
+          items:
+            type: string
+          description: Optional list of detailed error items
+      example:
+        code: 401
+        message: "Authentication required"
+    Patient:
+      type: object
+      required: [id, name]
+      properties:
+        id:
+          type: string
+          format: uuid
+          pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+          description: Unique patient identifier
+        name:
+          type: string
+          description: Patient name (minimal PHI returned by default)
+        birthDate:
+          type: string
+          format: date
+          description: Date of birth (PHI — access controlled)
+        gender:
+          type: string
+          enum: [male, female, other, unknown]
+        contact:
+          type: object
+          properties:
+            email:
+              type: string
+              format: email
+            phone:
+              type: string
+      example:
+        id: "123e4567-e89b-12d3-a456-426614174000"
+        name: "J. Smith"
+        birthDate: "1980-01-01"
+        gender: "unknown"
+        contact:
+          email: "jsmith@example.com"
+    PatientCreate:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        birthDate:
+          type: string
+          format: date
+        gender:
+          type: string
+      example:
+        name: "Jane Doe"
+        birthDate: "1990-05-10"
+        gender: "female"
+    PatientUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        contact:
+          type: object
+          properties:
+            email:
+              type: string
+              format: email
+            phone:
+              type: string
+    MedicalRecord:
+      type: object
+      required: [id, patientId, type, date]
+      properties:
+        id:
+          type: string
+          format: uuid
+          pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+        patientId:
+          type: string
+          format: uuid
+          pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+        type:
+          type: string
+          description: Record type (e.g., note, lab, imaging)
+        date:
+          type: string
+          format: date
+        summary:
+          type: string
+          description: Short, non-sensitive summary
+        details:
+          type: string
+          description: Detailed clinical data (sensitive PHI — access requires consent)
+        sensitive:
+          type: boolean
+          description: Indicates whether the record contains sensitive PHI
+      example:
+        id: "123e4567-e89b-12d3-a456-426614174001"
+        patientId: "123e4567-e89b-12d3-a456-426614174000"
+        type: "note"
+        date: "2025-12-15"
+        summary: "Follow-up visit, stable"
+        sensitive: true
+    MedicalRecordCreate:
+      type: object
+      required: [type, date, summary]
+      properties:
+        type:
+          type: string
+        date:
+          type: string
+          format: date
+        summary:
+          type: string
+        details:
+          type: string
+        sensitive:
+          type: boolean
+      example:
+        type: "lab"
+        date: "2026-01-10"
+        summary: "CBC results within expected range"
+        sensitive: false
+    MedicalRecordUpdate:
+      type: object
+      properties:
+        summary:
+          type: string
+        details:
+          type: string
+        sensitive:
+          type: boolean
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ValidationError:
+      description: Validation error — request body failed validation
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  type: string
+            example:
+              errors: ["name is required"]
+    Unauthorized:
+      description: Authentication required or invalid credentials
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: Forbidden — insufficient scope or consent
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+paths:
+  /patients:
+    get:
+      operationId: listPatients
+      summary: List patients
+      description: Returns a paginated list of patients (minimal PHI). Requires `patient:read` scope.
+      parameters:
+        - name: page
+          in: query
+          description: Page number (1-based)
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: size
+          in: query
+          description: Page size (items per page, max 100)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: A list of patients
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Patient'
+                  total:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+        - oauth2: ["patient:read"]
+        - bearerAuth: []
+    post:
+      operationId: createPatient
+      summary: Create a patient
+      description: Create a new patient record. Requires `patient:write` scope.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatientCreate'
+      responses:
+        '201':
+          description: Patient created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Patient'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - oauth2: ["patient:write"]
+        - bearerAuth: []
+  /patients/{patientId}:
+    parameters:
+      - name: patientId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+    get:
+      operationId: getPatient
+      summary: Get patient
+      description: Retrieve patient details. Access to full PHI requires consent; minimal fields may be returned otherwise.
+      responses:
+        '200':
+          description: Patient details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Patient'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+        - oauth2: ["patient:read"]
+        - bearerAuth: []
+    patch:
+      operationId: updatePatient
+      summary: Update patient
+      description: Update patient data. Requires `patient:write` scope.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatientUpdate'
+      responses:
+        '200':
+          description: Updated patient
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Patient'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+        - oauth2: ["patient:write"]
+        - bearerAuth: []
+    delete:
+      operationId: deletePatient
+      summary: Delete patient
+      description: Delete a patient record. Requires `patient:write` scope and appropriate consent for PHI removal.
+      responses:
+        '204':
+          description: Patient deleted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+        - oauth2: ["patient:write"]
+        - bearerAuth: []
+  /patients/{patientId}/records:
+    parameters:
+      - name: patientId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+    get:
+      operationId: listRecords
+      summary: List medical records
+      description: |
+        List medical records for a patient. Access to record `details` (sensitive PHI) requires explicit patient consent.
+        Operations without consent will return limited or redacted fields.
+      responses:
+        '200':
+          description: List of medical records
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/MedicalRecord'
+                  total:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+        - oauth2: ["record:read"]
+        - bearerAuth: []
+    post:
+      operationId: createRecord
+      summary: Create medical record
+      description: Create a medical record for a patient. Requires `record:write` scope; consent implications depend on record sensitivity.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MedicalRecordCreate'
+      responses:
+        '201':
+          description: Medical record created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MedicalRecord'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - oauth2: ["record:write"]
+        - bearerAuth: []
+  /patients/{patientId}/records/{recordId}:
+    parameters:
+      - name: patientId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+      - name: recordId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+    get:
+      operationId: getRecord
+      summary: Get medical record
+      description: |
+        Retrieve a medical record. Access to `details` requires explicit patient consent. If consent is not present, `details` may be omitted or redacted.
+      responses:
+        '200':
+          description: Medical record
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MedicalRecord'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+        - oauth2: ["record:read"]
+        - bearerAuth: []
+    patch:
+      operationId: updateRecord
+      summary: Update medical record
+      description: Update a medical record. Editing sensitive fields may require additional consent and audit.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MedicalRecordUpdate'
+      responses:
+        '200':
+          description: Updated medical record
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MedicalRecord'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+        - oauth2: ["record:write"]
+        - bearerAuth: []
+    delete:
+      operationId: deleteRecord
+      summary: Delete medical record
+      description: Deleting records that contain PHI requires appropriate consent and retention checks.
+      responses:
+        '204':
+          description: Medical record deleted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+        - oauth2: ["record:write"]
+        - bearerAuth: []
+security:
+  - bearerAuth: []
+
