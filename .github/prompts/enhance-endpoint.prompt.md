@@ -1,3 +1,10 @@
+---
+name: enhance-endpoint
+description: Targeted improvement for a single OpenAPI `paths` entry (descriptions, parameters, responses, examples).
+tools: ["read","search"]
+agent: "openapi-refinement"
+---
+
 Purpose
 - Make a targeted enhancement to a single `paths` entry: descriptions, parameters, responses, examples, and links to components.
 

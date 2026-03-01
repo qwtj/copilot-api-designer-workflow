@@ -1,3 +1,9 @@
+---
+name: versioning-strategy
+description: Recommend a versioning strategy and produce a small diff updating `info.version` and server URL patterns.
+tools: ["read","search"]
+---
+
 Purpose
 - Recommend a versioning strategy and update `info.version` and server URL patterns to align with semantic versioning or date-based versioning.
 

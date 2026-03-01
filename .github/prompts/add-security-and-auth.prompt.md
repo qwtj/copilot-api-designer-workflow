@@ -1,3 +1,9 @@
+---
+name: add-security-and-auth
+description: Add or refine `securitySchemes` and per-operation `security` requirements for the API.
+tools: ["read","search"]
+---
+
 Purpose
 - Add or refine `securitySchemes` and per-operation `security` requirements for the API.
 

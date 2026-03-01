@@ -1,3 +1,10 @@
+---
+name: standardize-errors
+description: Produce a standard error response schema and map common HTTP error codes to that schema.
+tools: ["read","search"]
+agent: "openapi-refinement"
+---
+
 Purpose
 - Produce a standard error response schema and map common HTTP error codes to that schema.
 

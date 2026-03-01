@@ -1,3 +1,10 @@
+---
+name: initial-spec-from-requirements
+description: Deterministically convert a structured requirements YAML fragment into an initial OpenAPI 3.1 diff patch.
+tools: ["read","search"]
+agent: "openapi-spec-drafter"
+---
+
 Purpose
 - Deterministically convert a structured `requirements` YAML fragment into an initial OpenAPI 3.1 `diff` patch.
 
