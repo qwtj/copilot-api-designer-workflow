@@ -18,20 +18,6 @@ State model (canonical)
 - `openapi_path`: path to the working OpenAPI file (default: `openapi.yaml`)
 - `history`: chronological list of events
 
-Handoff protocol
-- Agents must return either a YAML `diff` (patch) or a `full` `openapi.yaml` file as a markdown fenced block.
-- Example patch snippet an agent may return:
-
-```yaml
-diff: |
-  +paths:
-  +  /pets:
-  +    get:
-  +      summary: List pets
-```
-
-- Orchestrator will apply the agent-provided YAML using `yaml-manipulation` skills, update the state via `manage-state`, and call the next agent.
-
 Failure & iteration
 - On validation failures, orchestrator records issues in `history`, sets `phase` to `refinement-needed`, and calls `openapi-refinement` with the validator output and failing diffs.
 
