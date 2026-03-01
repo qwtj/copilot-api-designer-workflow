@@ -1,49 +1,4 @@
 {
-  "phase": "final-approved",
-  "status": "final-approved",
-  "current_agent": "openapi-validation",
-  "openapi_path": "./tmp/openapi.yaml",
-  "ready_for_implementation": true,
-  "history": [
-    {
-      "phase": "idea",
-      "agent": null,
-      "timestamp": "2026-03-01T12:00:00Z"
-    },
-    {
-      "phase": "requirements-gathered",
-      "agent": "openapi-requirements",
-      "timestamp": "2026-03-01T12:01:00Z"
-    },
-    {
-      "phase": "spec-drafted",
-      "agent": "openapi-spec-drafter",
-      "timestamp": "2026-03-01T12:03:00Z"
-    },
-    {
-      "phase": "validation-complete",
-      "agent": "openapi-validation",
-      "timestamp": "2026-03-01T12:05:00Z",
-      "notes": "Validation returned multiple best-practice issues; refinement required."
-    },
-    {
-      "phase": "refined",
-      "agent": "openapi-refinement",
-      "timestamp": "2026-03-01T12:08:00Z",
-      "notes": "Applied fixes: quoted scopes, added Error schema, operationIds, removed ambiguous global oauth2, added UUID patterns."
-    },
-    {
-      "phase": "final-approved",
-      "agent": "openapi-validation",
-      "timestamp": "2026-03-01T12:12:00Z",
-      "notes": "Final validation passed with non-blocking documentation suggestions."
-    }
-  ]
-}
-
-
-
-{
   "phase": "idea",
   "status": "idle",
   "current_agent": null,
