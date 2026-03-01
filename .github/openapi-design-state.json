@@ -1,0 +1,8 @@
+{
+  "phase": "idea",
+  "status": "idle",
+  "current_agent": null,
+  "openapi_path": "./tmp/openapi.yaml",
+  "ready_for_implementation": false,
+  "history": []
+}
