@@ -9,9 +9,9 @@ Purpose
 - Deterministic, idempotent prompt to start or resume the orchestrator with an explicit artifact path.
 
 Inputs (one required)
-- `requirements_path`: path to a YAML requirements file (e.g., .github/requirements.yaml)
+- `requirements_path`: path to a YAML requirements file (e.g., .github/requirements.yaml) use the path of an existing file if provided a requirements.yaml.
 - `openapi_path`: path to an existing openapi.yaml to resume (optional)
-- `initiator`: actor id (e.g., "user:alice")
+- `initiator`: actor id (e.g., "user:alice") default to develoepr unless previded as input.
 - `desired_next_phase`: optional override: one of ["requirements-gathering","spec-drafting","refinement","validation","final-review"].
 
 Behavior
