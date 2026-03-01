@@ -6,3 +6,5 @@ Orchestrator & Agent rules (glue)
 - Keep prompts reentrant: agents should be able to re-run against the same inputs and produce stable, minimal diffs.
 - For any validation failure, produce `findings` JSON and suggested `diff` fixes; do not auto-apply without orchestrator approval.
 - Use `runSubagent`: after `final-approved`, orchestrator prepares a `handoff.md` summary for implementers.
+
+ALL ARTIFACTS NEWLY CREATED BY AGENTS MUST BE IN `./tmp`
